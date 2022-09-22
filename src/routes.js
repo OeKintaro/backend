@@ -1,28 +1,12 @@
 const express = require('express');
 const routes = express.Router();
-const connections = require('./database/connections');
+const UserController = require('./controller/userController.js');
+
 const uniqid = require('uniqid');
 
-routes
-    .get('/users', async(req, res) => {
-        const users = await connections('users').select('*');
-        res.json(users);
-    
-});
-
-routes
-    .post('/users', async (req, res) => {
-        const {name, email, idade, empresa} = req.body;
-        const id = uniqid();
-        await connections('users').insert({
-            id,
-            name,
-            email,
-            idade,
-            empresa
-        });
-        res.json({id});
-        
-    });
-
+routes.get('/users', UserController.list);
+routes.get('/users/:id', UserController.show);
+routes.post('/users', UserController.create);
+routes.put('/users/:id', UserController.update);
+routes.delete('/users/:id', UserController.delete);
 module.exports = routes;
